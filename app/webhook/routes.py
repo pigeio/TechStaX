@@ -1,4 +1,4 @@
-from flask import Blueprint, json, request, jsonify, render_template
+from flask import Blueprint, json, request, jsonify
 from app.extensions import mongo
 from datetime import datetime, timezone
 import dateutil.parser
@@ -23,10 +23,6 @@ def format_timestamp(iso_str):
         return formatted_date
     except Exception as e:
         return iso_str
-
-@webhook.route('/', methods=["GET"])
-def index():
-    return render_template('index.html')
 
 @webhook.route('/receiver', methods=["POST"])
 def receiver():
