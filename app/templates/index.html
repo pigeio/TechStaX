@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Webhook Events</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GitHub Events Monitor</h1>
+            <p>Live feed of Push, Pull Request, and Merge activities</p>
+            <div class="status-indicator">
+                <span class="dot"></span>
+                <span class="text">Live</span>
+            </div>
+        </header>
+
+        <main>
+            <div id="events-loader" class="loader">
+                <div class="spinner"></div>
+                <p>Waiting for events...</p>
+            </div>
+            <ul id="events-list" class="events-list hidden">
+                <!-- Events will be populated here by JavaScript -->
+            </ul>
+        </main>
+    </div>
+
+    <script>
+        const eventsList = document.getElementById('events-list');
+        const loader = document.getElementById('events-loader');
+        
+        // Polling interval: 15 seconds as per requirements
+        const POLLING_INTERVAL = 15000;
+
+        function renderEvent(event) {
+            let message = '';
+            let iconClass = '';
+            
+            // Format mapping based on assignment
+            if (event.type === 'PUSH') {
+                message = `<span class="author">"${event.author}"</span> pushed to <span class="branch">"${event.to_branch}"</span> on <span class="time">${event.formatted_timestamp}</span>`;
+                iconClass = 'push-icon';
+            } else if (event.type === 'PULL_REQUEST') {
+                message = `<span class="author">"${event.author}"</span> submitted a pull request from <span class="branch">"${event.from_branch}"</span> to <span class="branch">"${event.to_branch}"</span> on <span class="time">${event.formatted_timestamp}</span>`;
+                iconClass = 'pr-icon';
+            } else if (event.type === 'MERGE') {
+                message = `<span class="author">"${event.author}"</span> merged branch <span class="branch">"${event.from_branch}"</span> to <span class="branch">"${event.to_branch}"</span> on <span class="time">${event.formatted_timestamp}</span>`;
+                iconClass = 'merge-icon';
+            }
+            
+            return `
+                <li class="event-card fade-in">
+                    <div class="event-icon ${iconClass}"></div>
+                    <div class="event-content">${message}</div>
+                </li>
+            `;
+        }
+
+        async function fetchEvents() {
+            try {
+                const response = await fetch('/webhook/events');
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const events = await response.json();
+                
+                if (events && events.length > 0) {
+                    loader.classList.add('hidden');
+                    eventsList.classList.remove('hidden');
+                    
+                    const eventsHtml = events.map(renderEvent).join('');
+                    eventsList.innerHTML = eventsHtml;
+                } else {
+                    loader.classList.remove('hidden');
+                    eventsList.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+        }
+
+        // Initial fetch
+        fetchEvents();
+        
+        // Set up polling
+        setInterval(fetchEvents, POLLING_INTERVAL);
+    </script>
+</body>
+</html>

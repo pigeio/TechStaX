@@ -1,0 +1,223 @@
+:root {
+    --bg-color: #0d1117;
+    --card-bg: rgba(22, 27, 34, 0.7);
+    --text-primary: #c9d1d9;
+    --text-secondary: #8b949e;
+    --accent: #58a6ff;
+    --accent-author: #7ee787;
+    --accent-branch: #ff7b72;
+    --border-color: #30363d;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 2rem;
+    background-image: 
+        radial-gradient(circle at top right, rgba(88, 166, 255, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at bottom left, rgba(126, 231, 135, 0.05) 0%, transparent 40%);
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, #58a6ff, #a371f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.status-indicator {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(46, 160, 67, 0.1);
+    border: 1px solid rgba(46, 160, 67, 0.4);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    color: #3fb950;
+    font-weight: 500;
+}
+
+.status-indicator .dot {
+    width: 8px;
+    height: 8px;
+    background-color: #3fb950;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 4px rgba(63, 185, 80, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(63, 185, 80, 0); }
+}
+
+.loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 0;
+    color: var(--text-secondary);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(88, 166, 255, 0.2);
+    border-radius: 50%;
+    border-top-color: var(--accent);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.events-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.event-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    border-color: #484f58;
+}
+
+.event-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.event-icon::after {
+    content: '';
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.push-icon { background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.2); }
+.push-icon::after {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2358a6ff"><path d="M12 2L19 10H14V16H10V10H5L12 2ZM5 20V22H19V20H5Z"></path></svg>');
+}
+
+.pr-icon { background: rgba(163, 113, 247, 0.1); border: 1px solid rgba(163, 113, 247, 0.2); }
+.pr-icon::after {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23a371f7"><path d="M18 16V6H13.5V4H20V16H22L19 20L16 16H18ZM4.5 4C5.32843 4 6 4.67157 6 5.5C6 6.32843 5.32843 7 4.5 7C3.67157 7 3 6.32843 3 5.5C3 4.67157 3.67157 4 4.5 4ZM4.5 17C5.32843 17 6 17.6716 6 18.5C6 19.3284 5.32843 20 4.5 20C3.67157 20 3 19.3284 3 18.5C3 17.6716 3.67157 17 4.5 17ZM4.5 9C4.85244 9 5.20141 8.87754 5.5 8.65V15.35C5.20141 15.1225 4.85244 15 4.5 15C3.39543 15 2.5 15.8954 2.5 17C2.5 18.1046 3.39543 19 4.5 19C5.60457 19 6.5 18.1046 6.5 17C6.5 15.8954 5.60457 15 4.5 15V9C5.60457 9 6.5 8.10457 6.5 7C6.5 5.89543 5.60457 5 4.5 5C3.39543 5 2.5 5.89543 2.5 7C2.5 8.10457 3.39543 9 4.5 9Z"></path></svg>');
+}
+
+.merge-icon { background: rgba(126, 231, 135, 0.1); border: 1px solid rgba(126, 231, 135, 0.2); }
+.merge-icon::after {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%237ee787"><path d="M9 19.5V17.5V14.5C9 14.5 11.5 14.5 13.5 14.5C15.5 14.5 17.5 14.5 17.5 14.5V20.5L23.5 15.5L17.5 10.5V12.5C17.5 12.5 16 12.5 13.5 12.5V8.5C13.5 6.29086 11.7091 4.5 9.5 4.5H9V2.5L3 7.5L9 12.5V10.5H9.5C10.6046 10.5 11.5 11.3954 11.5 12.5V14.5H9V19.5Z"></path></svg>');
+}
+
+.event-content {
+    font-size: 1.05rem;
+    flex-grow: 1;
+}
+
+.author {
+    color: var(--accent-author);
+    font-weight: 500;
+}
+
+.branch {
+    color: var(--accent-branch);
+    font-weight: 500;
+    background: rgba(255, 123, 114, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+
+.time {
+    color: var(--text-secondary);
+    font-size: 0.95em;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .event-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    header {
+        padding-top: 2rem;
+    }
+    
+    .status-indicator {
+        top: -10px;
+        right: 50%;
+        transform: translateX(50%);
+    }
+}
